@@ -3,6 +3,7 @@ package org.resttemplate.orderservice.services;
 
 import org.resttemplate.orderservice.DAO.ProductRequest;
 import org.resttemplate.orderservice.DAO.ProductResp;
+import org.resttemplate.orderservice.client.ProductClient;
 import org.resttemplate.orderservice.excep.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -26,35 +27,57 @@ public class OrderService {
     @Autowired
     private RestClient restClient;
 
-    public String getOrderService(String productID){
+    @Autowired
+    ProductClient productClient;
 
-      //  String resultOfrestTemplate = restTemplate.getForObject("http://localhost:8081/product/check/" + productID, String.class);
+//    public String getOrderService(String productID) {
+//
+//        //  String resultOfrestTemplate = restTemplate.getForObject("http://localhost:8081/product/check/" + productID, String.class);
+//
+//
+//        //RestClient Demo
+//        String resultOfRestClient = restClient.get().uri("http://localhost:8081/product/check/" + productID)
+//                .retrieve()
+//                .onStatus(httpStatusCode -> httpStatusCode.equals(404), (request, response) -> {
+//                            throw new ProductNotFoundException("Product not found");
+//                        }
+//
+//                )
+//                .onStatus(HttpStatusCode::is5xxServerError, ((request, response) -> {
+//                    throw new RuntimeException("Product service is not working");
+//                })).body(String.class);
+//
+//
+//        return "Response :" + resultOfRestClient;
+//    }
 
-        String resultOfRestClient = restClient.get().uri("http://localhost:8081/product/check/" + productID)
-                .retrieve()
-                .onStatus( httpStatusCode -> httpStatusCode.equals(404), (request, response) ->{
-                    throw new ProductNotFoundException("Product not found");
-                }
 
-        )
-                .onStatus(HttpStatusCode::is5xxServerError,((request, response) -> {
-                    throw new RuntimeException("Product service is not working");
-                })).body(String.class);
+//    public ProductResp createProduct(ProductRequest product) {
+//
+//
+//        ProductResp result = restClient.post()
+//                .uri("http://localhost:8081/product/create")
+//                .body(product)
+//                .retrieve()
+//                .body(ProductResp.class);
+//        System.out.println("product service response " + result);
+//        return result;
+//    }
 
 
-        return  "Response :"+resultOfRestClient;
+    //Feign Client Demo
+
+    public String  getProductStatus(String productID){
+        System.out.println("Order Service: before Feign call");
+        String result = productClient.checkProduct(productID);
+
+        System.out.println("Order Service: after Feign call");
+return  result;
     }
 
 
     public ProductResp createProduct(ProductRequest product) {
+        return productClient.createProduct(product);
 
-
-        ProductResp result = restClient.post()
-                .uri("http://localhost:8081/product/create")
-                .body(product)
-                .retrieve()
-                .body(ProductResp.class);
-        System.out.println("product service response "+result);
-         return result;
     }
 }
