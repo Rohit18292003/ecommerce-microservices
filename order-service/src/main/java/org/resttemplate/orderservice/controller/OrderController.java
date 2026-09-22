@@ -16,7 +16,7 @@ public class OrderController {
 
     @GetMapping("/checkProduct/{productID}")
     public String checkProduct(@PathVariable String productID){
-       return orderService.getOrderService(productID);
+       return orderService.getProductStatus(productID);
     }
 
 

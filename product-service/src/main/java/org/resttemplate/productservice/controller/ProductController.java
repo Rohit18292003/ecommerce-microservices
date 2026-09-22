@@ -12,7 +12,10 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/check/{productID}")
-    public String checkProduct(@PathVariable String productID){
+    public String checkProduct(@PathVariable String productID) throws InterruptedException {
+        System.out.println("Product Service: request started");
+        Thread.sleep(10000);
+        System.out.println("Product Service: request complete");
        return productService.isProductAvailableInStock(productID);
 
     }
