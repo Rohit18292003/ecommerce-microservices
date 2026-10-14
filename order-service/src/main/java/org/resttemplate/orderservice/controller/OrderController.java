@@ -6,6 +6,7 @@ import org.resttemplate.orderservice.DAO.ProductResp;
 import org.resttemplate.orderservice.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/order")
@@ -15,13 +16,13 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping("/checkProduct/{productID}")
-    public String checkProduct(@PathVariable String productID){
+    public Mono<String> checkProduct(@PathVariable String productID){
        return orderService.getProductStatus(productID);
     }
 
 
     @PostMapping("/createProduct")
-    public ProductResp createProduct(@RequestBody ProductRequest product){
+    public Mono<ProductResp> createProduct(@RequestBody ProductRequest product){
         return orderService.createProduct(product);
     }
 
