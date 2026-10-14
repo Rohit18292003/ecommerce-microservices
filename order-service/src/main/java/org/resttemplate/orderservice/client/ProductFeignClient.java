@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
         url ="http://localhost:8081/product"
         
 )
-public interface ProductClient {
+public interface ProductFeignClient {
 
     @GetMapping("/check/{productID}")
     public String checkProduct(@PathVariable String productID);
